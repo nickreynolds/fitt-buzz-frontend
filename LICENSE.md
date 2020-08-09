@@ -1,6 +1,7 @@
 The MIT License (MIT)
 
-Copyright (c) 2019 Maximilian Stoiber
+Original Work Copyright (c) 2019 Maximilian Stoiber
+Modified Work Copyright (c) 2020 Nick Reynolds
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
