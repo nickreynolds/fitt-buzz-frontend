@@ -41,7 +41,7 @@ import {
 import { setContext } from '@apollo/client/link/context';
 
 const httpLink = createHttpLink({
-  uri: 'http://graphql.fitt.buzz/',
+  uri: 'https://graphql.fitt.buzz/',
 });
 
 const authLink = setContext((_, { headers }) => {
