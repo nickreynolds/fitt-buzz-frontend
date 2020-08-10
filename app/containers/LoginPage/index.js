@@ -11,7 +11,7 @@ import LOGIN from '../../graphql/mutations/Login';
 import { writeStorage } from '@rehooks/local-storage';
 import H1 from 'components/H1';
 import messages from './messages';
-import UnauthenticatedRoute from 'components/UnauthenticatedRoute';
+import UnauthenticatedRoute from 'components/auth/UnauthenticatedRoute';
 
 export default function LoginPage() {
   const [username, setUsername] = useState('');

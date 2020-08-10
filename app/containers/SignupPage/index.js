@@ -9,7 +9,7 @@ import { FormattedMessage } from 'react-intl';
 import { useMutation } from '@apollo/client';
 import SIGNUP from '../../graphql/mutations/Signup';
 import { writeStorage } from '@rehooks/local-storage';
-import UnauthenticatedRoute from 'components/UnauthenticatedRoute';
+import UnauthenticatedRoute from 'components/auth/UnauthenticatedRoute';
 
 import H1 from 'components/H1';
 import messages from './messages';

@@ -15,7 +15,7 @@ import HomePage from 'containers/HomePage/Loadable';
 import LoginPage from 'containers/LoginPage/Loadable';
 import SignupPage from 'containers/SignupPage/Loadable';
 import NotFoundPage from 'containers/NotFoundPage/Loadable';
-import AuthenticatedRoute from 'components/AuthenticatedRoute';
+import AuthenticatedRoute from 'components/auth/AuthenticatedRoute';
 import Header from 'components/Header';
 import Footer from 'components/Footer';
 
