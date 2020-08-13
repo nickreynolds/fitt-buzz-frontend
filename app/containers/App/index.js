@@ -20,6 +20,7 @@ import Header from 'components/Header';
 import Footer from 'components/Footer';
 
 import GlobalStyle from '../../global-styles';
+import CreateExercisePage from 'containers/CreateExercisePage/Loadable';
 
 const AppWrapper = styled.div`
   max-width: calc(768px + 16px * 2);
@@ -45,7 +46,8 @@ export default function App() {
         <Route path="/signup" component={SignupPage} />
 
         <AuthenticatedRoute>
-          <Route path="/" component={HomePage} />
+          <Route exact path="/" component={HomePage} />
+          <Route path="/create-exercise" component={CreateExercisePage} />
         </AuthenticatedRoute>
         <Route path="" component={NotFoundPage} />
       </Switch>
