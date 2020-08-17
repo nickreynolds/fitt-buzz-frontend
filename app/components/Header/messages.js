@@ -28,4 +28,8 @@ export default defineMessages({
     id: `${scope}.logout`,
     defaultMessage: 'Log out',
   },
+  createExercise: {
+    id: `${scope}.createExercise`,
+    defaultMessage: 'Create Exercise',
+  },
 });

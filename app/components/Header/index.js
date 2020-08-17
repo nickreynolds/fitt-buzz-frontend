@@ -25,6 +25,9 @@ function Header() {
           >
             <FormattedMessage {...messages.logout} />
           </HeaderLinkButton>
+          <HeaderLink to="/create-exercise">
+            <FormattedMessage {...messages.createExercise} />
+          </HeaderLink>
         </NavBar>
       </div>
     );

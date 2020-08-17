@@ -17,6 +17,7 @@ export default function LoginPage() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [login, { data }] = useMutation(LOGIN);
+  const [errorMessage, setErrorMessage] = useState('');
   return (
     <UnauthenticatedRoute>
       <Helmet>
@@ -30,11 +31,14 @@ export default function LoginPage() {
         onSubmit={async e => {
           e.preventDefault();
           try {
+            setErrorMessage('');
+            console.log('about to start login');
             const result = await login({ variables: { username, password } });
             console.log('result: ', result);
             writeStorage('token', result.data.login.token);
           } catch (ex) {
-            console.log('ex: ', ex);
+            console.log('error: ', ex);
+            setErrorMessage(ex);
           }
         }}
       >
@@ -49,6 +53,7 @@ export default function LoginPage() {
           type="password"
           onChange={e => setPassword(e.target.value)}
         />
+        {errorMessage && <span>{errorMessage}</span>}
         <button>Submit</button>
       </form>
     </UnauthenticatedRoute>

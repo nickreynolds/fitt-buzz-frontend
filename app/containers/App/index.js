@@ -16,11 +16,13 @@ import LoginPage from 'containers/LoginPage/Loadable';
 import SignupPage from 'containers/SignupPage/Loadable';
 import NotFoundPage from 'containers/NotFoundPage/Loadable';
 import AuthenticatedRoute from 'components/auth/AuthenticatedRoute';
+import RoutinePage from 'containers/RoutinePage/Loadable';
 import Header from 'components/Header';
 import Footer from 'components/Footer';
 
 import GlobalStyle from '../../global-styles';
 import CreateExercisePage from 'containers/CreateExercisePage/Loadable';
+import Feed from 'containers/Feed/Loadable';
 
 const AppWrapper = styled.div`
   max-width: calc(768px + 16px * 2);
@@ -46,7 +48,8 @@ export default function App() {
         <Route path="/signup" component={SignupPage} />
 
         <AuthenticatedRoute>
-          <Route exact path="/" component={HomePage} />
+          <Route exact path="/" component={Feed} />
+          <Route path="/routine/:routineId" component={RoutinePage} />
           <Route path="/create-exercise" component={CreateExercisePage} />
         </AuthenticatedRoute>
         <Route path="" component={NotFoundPage} />
