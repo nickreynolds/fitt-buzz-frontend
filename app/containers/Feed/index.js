@@ -16,11 +16,13 @@ import styled from 'styled-components';
 import messages from './messages';
 import ExerciseFeed from 'components/ExerciseFeed';
 import RoutineFeed from 'components/RoutineFeed';
+import MyRoutinesFeed from 'components/MyRoutinesFeed';
 
 const StyledTabList = styled(TabList)`
   list-style: none;
   padding: 0;
   margin: 0;
+  margin-bottom: 5px;
   border-bottom: 1px solid;
 `;
 
@@ -37,7 +39,6 @@ export function Feed() {
         <title>Feed</title>
         <meta name="description" content="Description of Feed" />
       </Helmet>
-      <FormattedMessage {...messages.header} />
       <Tabs
         selectedIndex={tabIndex}
         onSelect={tabIndex => setTabIndex(tabIndex)}
@@ -54,7 +55,7 @@ export function Feed() {
           <ExerciseFeed />
         </TabPanel>
         <TabPanel>
-          <RoutineFeed />
+          <MyRoutinesFeed />
         </TabPanel>
       </Tabs>
     </div>

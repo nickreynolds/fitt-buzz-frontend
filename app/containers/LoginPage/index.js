@@ -38,7 +38,7 @@ export default function LoginPage() {
             writeStorage('token', result.data.login.token);
           } catch (ex) {
             console.log('error: ', ex);
-            setErrorMessage(ex);
+            setErrorMessage(`${ex}`);
           }
         }}
       >

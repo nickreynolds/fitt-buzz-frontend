@@ -11,12 +11,13 @@ import styled from 'styled-components';
 import { FormattedMessage } from 'react-intl';
 import messages from './messages';
 import { useQuery, gql } from '@apollo/client';
+import { Link } from 'react-router-dom';
 import RoutineListItem from '../RoutineListItem';
 // import EXERCISES from '../../graphql/queries/EXERCISES';
 
-const ROUTINES = gql`
-  query ROUTINES {
-    feed {
+const MY_ROUTINES = gql`
+  query MY_ROUTINES {
+    myRoutines {
       name
       id
       description
@@ -36,8 +37,8 @@ const ROUTINES = gql`
   }
 `;
 
-function RoutineFeed() {
-  const { loading, error, data } = useQuery(ROUTINES);
+function MyRoutinesFeed() {
+  const { loading, error, data } = useQuery(MY_ROUTINES);
   if (loading) {
     return <></>;
   } else if (error) {
@@ -46,7 +47,7 @@ function RoutineFeed() {
   }
   return (
     <div>
-      {data.feed.map(routine => {
+      {data.myRoutines.map(routine => {
         const revision = routine.revisions[0];
 
         return <RoutineListItem routine={routine} />;
@@ -55,6 +56,6 @@ function RoutineFeed() {
   );
 }
 
-RoutineFeed.propTypes = {};
+MyRoutinesFeed.propTypes = {};
 
-export default RoutineFeed;
+export default MyRoutinesFeed;
