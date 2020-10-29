@@ -60,7 +60,7 @@ const DescriptionBlock = styled.div`
 function RoutineListItem(props) {
   const { routine } = props;
   const numRevisions = routine.revisions.length;
-  console.log('numRevisions: ', numRevisions);
+  console.log('2numRevisions: ', numRevisions);
   return (
     <RoutineContainer key={routine.id}>
       <RoutineLink to={`/routine/${routine.id}`}>{routine.name}</RoutineLink>
