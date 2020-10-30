@@ -66,11 +66,13 @@ function RoutineListItem(props) {
       <RoutineLink to={`/routine/${routine.id}`}>{routine.name}</RoutineLink>
       <DescriptionBlock>{routine.description}</DescriptionBlock>
       <ExerciseListContainer>
-        {routine.revisions[numRevisions - 1].setGroups.map(setGroup => {
-          return setGroup.exercises.map(exercise => {
-            return <ExerciseContainer>{exercise.name}</ExerciseContainer>;
-          });
-        })}
+        {routine.revisions[numRevisions - 1].setGroupPlacements.map(
+          setGroupPlacement => {
+            return setGroupPlacement.setGroup.exercises.map(exercise => {
+              return <ExerciseContainer>{exercise.name}</ExerciseContainer>;
+            });
+          },
+        )}
       </ExerciseListContainer>
     </RoutineContainer>
   );

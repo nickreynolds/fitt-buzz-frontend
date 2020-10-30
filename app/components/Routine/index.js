@@ -12,6 +12,7 @@ import { FormattedMessage } from 'react-intl';
 import messages from './messages';
 import { useQuery, gql, useMutation } from '@apollo/client';
 import CloneRoutineAtRevision from '../../graphql/mutations/CloneRoutine';
+import { colors } from '../../utils/constants';
 const ROUTINE = gql`
   query ROUTINE($routineId: String!) {
     routine(id: $routineId) {
@@ -20,16 +21,19 @@ const ROUTINE = gql`
       description
       revisions {
         id
-        setGroups {
-          exercises {
-            name
-            id
-            description
-            format {
+        setGroupPlacements {
+          placement
+          setGroup {
+            exercises {
               name
+              id
+              description
+              format {
+                name
+              }
             }
+            defaultNumSets
           }
-          defaultNumSets
         }
       }
     }
@@ -39,6 +43,7 @@ const ROUTINE = gql`
 const RoutineContainer = styled.div`
   display: flex;
   flex-direction: column;
+  font-family: 'Roboto', sans-serif;
 `;
 
 const RoutineHeader = styled.div`
@@ -52,7 +57,7 @@ const CloneButtonContainer = styled.div`
 `;
 
 const CloneButton = styled.button`
-  background-color: blue;
+  background-color: ${colors.popElement1};
   color: white;
   font-size: 14px;
   padding: 4px 4px 4px 4px;
@@ -64,7 +69,8 @@ const RoutineSetGroups = styled.div`
   flex-direction: column;
 `;
 
-const SetGroupContainer = styled.div`
+const SetGroupOuterContainer = styled.div`
+  background-color: ${colors.secondaryBackground};
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -73,6 +79,18 @@ const SetGroupContainer = styled.div`
   border: 1px solid;
   border-radius: 4px;
 `;
+
+const SetGroupContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: left;
+  width: 80%;
+  border-right: 1px solid;
+`;
+
+const SetContainer = styled.div``;
+
+const NumSetsContainer = styled.div``;
 
 function Routine({ routineId }) {
   const [errorText, setErrorText] = useState('');
@@ -110,23 +128,30 @@ function Routine({ routineId }) {
               }
             }}
           >
-            Clone Me
+            Add to My Routines
           </CloneButton>
         </CloneButtonContainer>
       </RoutineHeader>
       {errorText && <span>{errorText}</span>}
       <RoutineSetGroups>
-        {data.routine.revisions[revisionIndex].setGroups.map(setGroup => {
-          console.log('setGroup: ', setGroup);
-          return (
-            <SetGroupContainer>
-              {setGroup.exercises.map(exercise => {
-                return <>{exercise.name}</>;
-              })}
-              <>{' - x' + setGroup.defaultNumSets}</>
-            </SetGroupContainer>
-          );
-        })}
+        {data.routine.revisions[revisionIndex].setGroupPlacements.map(
+          setGroupPlacement => {
+            const setGroup = setGroupPlacement.setGroup;
+            console.log('setGroup: ', setGroup);
+            return (
+              <SetGroupOuterContainer>
+                <SetGroupContainer>
+                  {setGroup.exercises.map(exercise => {
+                    return <SetContainer>{exercise.name}</SetContainer>;
+                  })}
+                </SetGroupContainer>
+                <NumSetsContainer>
+                  {' - x' + setGroup.defaultNumSets}
+                </NumSetsContainer>
+              </SetGroupOuterContainer>
+            );
+          },
+        )}
       </RoutineSetGroups>
     </RoutineContainer>
   );
