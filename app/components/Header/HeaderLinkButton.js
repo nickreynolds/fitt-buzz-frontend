@@ -4,8 +4,8 @@ import { colors } from '../../utils/constants';
 
 export default styled.button`
   display: inline-flex;
-  padding: 0.25em 2em;
-  margin: 1em;
+  padding: 2px;
+  margin: 2px;
   text-decoration: none;
   border-radius: 4px;
   -webkit-font-smoothing: antialiased;
@@ -15,7 +15,7 @@ export default styled.button`
   outline: 0;
   font-family: 'Roboto', sans-serif;
   font-weight: bold;
-  font-size: 16px;
+  font-size: 14px;
   color: ${colors.popElement1};
 
   &:active {

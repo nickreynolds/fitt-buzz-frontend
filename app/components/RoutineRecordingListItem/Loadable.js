@@ -1,6 +1,6 @@
 /**
  *
- * Asynchronously loads the component for ActiveSetGroup
+ * Asynchronously loads the component for RoutineListItem
  *
  */
 

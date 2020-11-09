@@ -7,5 +7,7 @@ export const colors = {
   textColor: '#ffffff',
   primaryBackground: '#18202f',
   secondaryBackground: '#283245',
+  tertiaryBackground: '#10ad4f',
+  activeSetBackground: '#323aa8',
   popElement1: '#58a7ff',
 };

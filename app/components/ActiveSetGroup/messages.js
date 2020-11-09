@@ -6,11 +6,11 @@
 
 import { defineMessages } from 'react-intl';
 
-export const scope = 'app.components.Routine';
+export const scope = 'app.components.ActiveSetGroup';
 
 export default defineMessages({
   header: {
     id: `${scope}.header`,
-    defaultMessage: 'This is the Routine component!',
+    defaultMessage: 'This is the ActiveSetGroup component!',
   },
 });

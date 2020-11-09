@@ -3,8 +3,8 @@ import styled from 'styled-components';
 
 export default styled(Link)`
   display: inline-flex;
-  padding: 0.25em 2em;
-  margin: 1em;
+  padding: 2px;
+  margin: 2px;
   text-decoration: none;
   border-radius: 4px;
   -webkit-font-smoothing: antialiased;
@@ -14,7 +14,7 @@ export default styled(Link)`
   outline: 0;
   font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
   font-weight: bold;
-  font-size: 16px;
+  font-size: 14px;
   border: 2px solid #41addd;
   color: #41addd;
 

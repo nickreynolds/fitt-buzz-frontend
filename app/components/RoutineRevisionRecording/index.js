@@ -19,28 +19,66 @@ const ROUTINE_REVISION_RECORDING = gql`
   query ROUTINE_REVISION_RECORDING($id: String!) {
     routineRevisionRecording(id: $id) {
       id
-      completedSetGroups
+      createdAt
       routineRevision {
+        id
         routine {
-          name
           id
-          description
-          createdBy {
-            id
-          }
+          name
         }
         setGroupPlacements {
-          placement
           setGroup {
+            id
             exercises {
-              name
               id
-              description
+              name
               format {
+                id
                 name
               }
             }
             defaultNumSets
+          }
+        }
+      }
+      completedSetGroups
+      setGroupRecordings {
+        id
+        setGroup {
+          id
+          exercises {
+            id
+            name
+            description
+            format {
+              id
+              name
+            }
+          }
+          defaultNumSets
+        }
+        completedSets
+        setRecordings {
+          id
+          completedExercises
+          exerciseRecordings {
+            id
+            exercise {
+              id
+              name
+              format {
+                id
+                name
+              }
+            }
+            measurableRecordings {
+              id
+              measurable {
+                id
+                name
+              }
+              value
+            }
           }
         }
       }
@@ -102,6 +140,7 @@ const SetContainer = styled.div``;
 const NumSetsContainer = styled.div``;
 
 function RoutineRevisionRecording({ id }) {
+  console.log("RoutineRevisionRecording 1");
   const [errorText, setErrorText] = useState('');
 
   const [userId] = useLocalStorage('userId');
@@ -117,10 +156,11 @@ function RoutineRevisionRecording({ id }) {
   }
   console.log('data: ', data);
 
+  console.log("RoutineRevisionRecording 2");
   return (
     <RoutineRecordingContainer>
       <RoutineHeader>
-        <>Name: {data.routineRevisionRecording.routineRevision.routine.name}</>
+        <>{data.routineRevisionRecording.routineRevision.routine.name}</>
         <>
           Completed Set Groups:{' '}
           {data.routineRevisionRecording.completedSetGroups}
@@ -130,24 +170,27 @@ function RoutineRevisionRecording({ id }) {
       <RoutineSetGroups>
         {data.routineRevisionRecording.routineRevision.setGroupPlacements.map(
           (setGroupPlacement, i) => {
+            const setGroupRecording = data.routineRevisionRecording.setGroupRecordings.find((setGroupRecording) => { setGroupRecording.setGroup.id === setGroupPlacement.setGroup.id});
+
             if (i === data.routineRevisionRecording.completedSetGroups) {
-              return <ActiveSetGroup setGroup={setGroupPlacement.setGroup} />
+              return <ActiveSetGroup setGroup={setGroupPlacement.setGroup} setGroupRecording={setGroupRecording} />
             } else {
-            const setGroup = setGroupPlacement.setGroup;
-            console.log('setGroup: ', setGroup);
-            return (
-              <SetGroupOuterContainer>
-                <SetGroupContainer>
-                  {setGroup.exercises.map(exercise => {
-                    return <SetContainer>{exercise.name}</SetContainer>;
-                  })}
-                </SetGroupContainer>
-                <NumSetsContainer>
-                  {' - x' + setGroup.defaultNumSets}
-                </NumSetsContainer>
-              </SetGroupOuterContainer>
-            );
-                }
+              const setGroup = setGroupPlacement.setGroup;
+              console.log('setGroup: ', setGroup);
+              return (
+                <SetGroupOuterContainer>
+                  <SetGroupContainer>
+                    {setGroup.exercises.map(exercise => {
+                      console.log("put exercise");
+                      return <SetContainer>{exercise.name}</SetContainer>;
+                    })}
+                  </SetGroupContainer>
+                  <NumSetsContainer>
+                    {' - x' + setGroup.defaultNumSets}
+                  </NumSetsContainer>
+                </SetGroupOuterContainer>
+              );
+            }
           },
         )}
       </RoutineSetGroups>

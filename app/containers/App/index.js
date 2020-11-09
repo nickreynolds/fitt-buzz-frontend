@@ -20,10 +20,13 @@ import RoutinePage from 'containers/RoutinePage/Loadable';
 import RoutineRevisionRecordingPage from 'containers/RoutineRevisionRecordingPage/Loadable';
 import Header from 'components/Header';
 import Footer from 'components/Footer';
+import ExerciseFeed from 'components/ExerciseFeed';
+import RoutineFeed from 'components/RoutineFeed';
+import MyRoutinesFeed from 'components/MyRoutinesFeed';
+import MyHistoryFeed from 'components/MyHistoryFeed';
 
 import GlobalStyle from '../../global-styles';
 import CreateExercisePage from 'containers/CreateExercisePage/Loadable';
-import Feed from 'containers/Feed/Loadable';
 
 const AppWrapper = styled.div`
   max-width: calc(768px + 16px * 2);
@@ -38,10 +41,10 @@ export default function App() {
   return (
     <AppWrapper>
       <Helmet
-        titleTemplate="%s - React.js Boilerplate"
-        defaultTitle="React.js Boilerplate"
+        titleTemplate="%s - Fitt.Buzz"
+        defaultTitle="Fitt.Buzz"
       >
-        <meta name="description" content="A React.js Boilerplate application" />
+        <meta name="description" content="Fitt.Buzz application" />
       </Helmet>
       <Header />
       <Switch>
@@ -49,7 +52,10 @@ export default function App() {
         <Route path="/signup" component={SignupPage} />
 
         <AuthenticatedRoute>
-          <Route exact path="/" component={Feed} />
+          <Route exact path="/" component={MyRoutinesFeed} />
+          <Route exact path="/my-history" component={MyHistoryFeed} />
+          <Route exact path="/explore-routines" component={RoutineFeed} />
+          <Route exact path="/explore-exercises" component={ExerciseFeed} />
           <Route path="/routine/:routineId" component={RoutinePage} />
           <Route
             path="/recording/:id"
