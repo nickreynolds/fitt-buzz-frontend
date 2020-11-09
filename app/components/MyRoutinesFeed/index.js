@@ -22,14 +22,19 @@ const MY_ROUTINES = gql`
       id
       description
       revisions {
-        setGroups {
-          exercises {
-            name
-            id
-            description
-            format {
+        id
+        setGroupPlacements {
+          placement
+          setGroup {
+            exercises {
               name
+              id
+              description
+              format {
+                name
+              }
             }
+            defaultNumSets
           }
         }
       }

@@ -17,6 +17,7 @@ import SignupPage from 'containers/SignupPage/Loadable';
 import NotFoundPage from 'containers/NotFoundPage/Loadable';
 import AuthenticatedRoute from 'components/auth/AuthenticatedRoute';
 import RoutinePage from 'containers/RoutinePage/Loadable';
+import RoutineRevisionRecordingPage from 'containers/RoutineRevisionRecordingPage/Loadable';
 import Header from 'components/Header';
 import Footer from 'components/Footer';
 
@@ -50,6 +51,10 @@ export default function App() {
         <AuthenticatedRoute>
           <Route exact path="/" component={Feed} />
           <Route path="/routine/:routineId" component={RoutinePage} />
+          <Route
+            path="/recording/:id"
+            component={RoutineRevisionRecordingPage}
+          />
           <Route path="/create-exercise" component={CreateExercisePage} />
         </AuthenticatedRoute>
         <Route path="" component={NotFoundPage} />

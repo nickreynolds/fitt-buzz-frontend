@@ -36,6 +36,7 @@ export default function LoginPage() {
             const result = await login({ variables: { username, password } });
             console.log('result: ', result);
             writeStorage('token', result.data.login.token);
+            writeStorage('userId', result.data.login.user.id);
           } catch (ex) {
             console.log('error: ', ex);
             setErrorMessage(`${ex}`);

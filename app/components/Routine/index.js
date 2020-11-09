@@ -12,13 +12,19 @@ import { FormattedMessage } from 'react-intl';
 import messages from './messages';
 import { useQuery, gql, useMutation } from '@apollo/client';
 import CloneRoutineAtRevision from '../../graphql/mutations/CloneRoutine';
+import StartRoutineRevisionRecording from '../../graphql/mutations/StartRoutineRevisionRecording';
 import { colors } from '../../utils/constants';
+import { Redirect } from 'react-router-dom';
+import useLocalStorage from '@rehooks/local-storage';
 const ROUTINE = gql`
   query ROUTINE($routineId: String!) {
     routine(id: $routineId) {
       name
       id
       description
+      createdBy {
+        id
+      }
       revisions {
         id
         setGroupPlacements {
@@ -52,16 +58,17 @@ const RoutineHeader = styled.div`
   justify-content: space-between;
 `;
 
-const CloneButtonContainer = styled.div`
+const ButtonContainer = styled.div`
   padding: 10px 10px 10px 10px;
 `;
 
-const CloneButton = styled.button`
+const Button = styled.button`
   background-color: ${colors.popElement1};
   color: white;
   font-size: 14px;
   padding: 4px 4px 4px 4px;
   border-radius: 3px;
+  cursor: pointer;
 `;
 
 const RoutineSetGroups = styled.div`
@@ -97,47 +104,88 @@ function Routine({ routineId }) {
   const [cloneRoutineAtRevision, { data2 }] = useMutation(
     CloneRoutineAtRevision,
   );
+  const [startRoutineRevisionRecording, { data3 }] = useMutation(
+    StartRoutineRevisionRecording,
+  );
+  const [newRoutineId, setNewRoutineId] = useState('');
+  const [newRecordingId, setNewRecordingId] = useState('');
+  const [userId] = useLocalStorage('userId');
+  // console.log('token: ', token);
   const { loading, error, data } = useQuery(ROUTINE, {
     variables: { routineId },
   });
+
   if (loading) {
     return <></>;
   } else if (error) {
     console.log('error: ', error);
     return <span>{error}</span>;
   }
+
+  const currentUserIsOwner = userId === data.routine.createdBy.id;
   const numRevisions = data.routine.revisions.length;
   const revisionId = data.routine.revisions[numRevisions - 1].id;
   const revisionIndex = numRevisions - 1;
-  console.log('revisionId: ', revisionId);
   return (
     <RoutineContainer>
       <RoutineHeader>
         <>Name: {data.routine.name}</>
-        <CloneButtonContainer>
-          <CloneButton
-            onClick={async e => {
-              e.preventDefault();
-              try {
-                const result = await cloneRoutineAtRevision({
-                  variables: { routineId, revisionId },
-                });
-                console.log('result: ', result);
-              } catch (ex) {
-                setErrorText(ex);
-              }
-            }}
-          >
-            Add to My Routines
-          </CloneButton>
-        </CloneButtonContainer>
+        {!currentUserIsOwner && (
+          <ButtonContainer>
+            <Button
+              onClick={async e => {
+                e.preventDefault();
+                try {
+                  const result = await cloneRoutineAtRevision({
+                    variables: { routineId, revisionId },
+                  });
+                  console.log('result: ', result);
+
+                  const newRoutineId = result.data.cloneRoutineAtRevision.id;
+                  setNewRoutineId(newRoutineId);
+                } catch (ex) {
+                  setErrorText(ex);
+                }
+              }}
+            >
+              Add to My Routines
+            </Button>
+          </ButtonContainer>
+        )}
+        {currentUserIsOwner && (
+          <ButtonContainer>
+            <Button
+              onClick={async e => {
+                e.preventDefault();
+                try {
+                  console.log('start recording 1');
+                  console.log('routineId: ', routineId);
+                  console.log('revisionId: ', revisionId);
+                  const result = await startRoutineRevisionRecording({
+                    variables: { routineId, revisionId },
+                  });
+                  console.log('start recording 2');
+                  console.log('result: ', result);
+
+                  const newRecordingId =
+                    result.data.startRoutineRevisionRecording;
+                  setNewRecordingId(newRecordingId);
+                } catch (ex) {
+                  setErrorText(ex);
+                }
+              }}
+            >
+              Start Routine
+            </Button>
+          </ButtonContainer>
+        )}
       </RoutineHeader>
-      {errorText && <span>{errorText}</span>}
+      {errorText && <span>{`${errorText}`}</span>}
       <RoutineSetGroups>
         {data.routine.revisions[revisionIndex].setGroupPlacements.map(
           setGroupPlacement => {
             const setGroup = setGroupPlacement.setGroup;
-            console.log('setGroup: ', setGroup);
+            // console.log('setGroup: ', setGroup);
             return (
               <SetGroupOuterContainer>
                 <SetGroupContainer>
@@ -153,6 +201,8 @@ function Routine({ routineId }) {
           },
         )}
       </RoutineSetGroups>
+      {newRoutineId && <Redirect to={`/routine/${newRoutineId}`} />}
+      {newRecordingId && <Redirect to={`/recording/${newRecordingId}`} />}
     </RoutineContainer>
   );
 }

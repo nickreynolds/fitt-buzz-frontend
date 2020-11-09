@@ -38,6 +38,7 @@ export default function LoginPage() {
             });
             console.log('result: ', result);
             writeStorage('token', result.data.signup.token);
+            writeStorage('userId', result.data.login.user.id);
           } catch (ex) {
             console.log('error: ', ex);
             setErrorMessage(ex);
