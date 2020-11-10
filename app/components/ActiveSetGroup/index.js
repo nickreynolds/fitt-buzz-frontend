@@ -13,6 +13,7 @@ import messages from './messages';
 import { useQuery, gql, useMutation } from '@apollo/client';
 import { colors } from '../../utils/constants';
 import useLocalStorage from '@rehooks/local-storage';
+import ActiveExerciseComponent from "../ActiveExerciseComponent";
 
 
 const ActiveSetGroupContainer = styled.div`
@@ -49,19 +50,38 @@ const DefaultSetComponent = styled.div`
 `;
 
 
-function ActiveSetGroup({ setGroup, setGroupRecording }) {
-  console.log("active set group yes: ", setGroup);
-  console.log("set group recording: ", setGroupRecording);
+const DefaultExerciseComponent = styled.div`
+  background-color: ${colors.secondaryBackground};
+  display: flex;
+  flex-direction: column;
+  font-family: 'Roboto', sans-serif;
+  margin: 4px 4px 4px 4px;
+  padding: 4px 4px 4px 4px;
+  border: 1px solid;
+  border-radius: 4px;
+`;
 
-  const currentSet = setGroupRecording ? setGroupRecording.currentSet : 0;
-  console.log("currentSet: ", currentSet);
+
+function ActiveSetGroup({ setGroup, setGroupRecording, routineRevisionRecordingId }) {
+
+  const currentSet = setGroupRecording ? setGroupRecording.completedSets : 0;
+  // console.log("currentSet: ", currentSet);
   const numSets = setGroup.defaultNumSets;
   let setComponents = [];
   for (var i = 0; i < numSets; i++) {
-    const Component2 = i == currentSet ? ActiveSetComponent : DefaultSetComponent;
-    const setComponent = (<Component2>
-      {setGroup.exercises.map((exercise) => {
-        return (<div>{exercise.name}</div>)
+    const isActiveSet = i == currentSet;
+    const Component2 = isActiveSet ? ActiveSetComponent : DefaultSetComponent;
+    // console.log("setGroupRecording: ", setGroupRecording);
+    const activeExerciseIndex = setGroupRecording && setGroupRecording.setRecordings[i] ? setGroupRecording.setRecordings[i].exerciseRecordings.length : 0;
+
+    const setComponent = (<Component2 key={i+"component"}>
+      {setGroup.exercises.map((exercise, j) => {
+        if (isActiveSet && j == activeExerciseIndex) {
+
+          return (<ActiveExerciseComponent key={j+"activeSetGroup"} exercise={exercise} setGroup={setGroup} setGroupRecording={setGroupRecording} routineRevisionRecordingId={routineRevisionRecordingId} />)
+        } else {
+          return (<DefaultExerciseComponent key={j+"defaultSetGroup"}>{exercise.name}</DefaultExerciseComponent>)
+        }
       })}
     </Component2>);
     setComponents.push(setComponent);

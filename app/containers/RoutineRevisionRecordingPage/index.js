@@ -16,7 +16,6 @@ import messages from './messages';
 
 export function RoutineRevisionRecordingPage(props) {
   let id = props.match.params.id;
-  console.log('id: ', id);
   return (
     <div>
       <RoutineRevisionRecording id={id} />

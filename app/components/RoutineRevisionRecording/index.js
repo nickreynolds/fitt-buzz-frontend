@@ -15,7 +15,8 @@ import { colors } from '../../utils/constants';
 import useLocalStorage from '@rehooks/local-storage';
 import ActiveSetGroup from '../ActiveSetGroup';
 
-const ROUTINE_REVISION_RECORDING = gql`
+// import ROUTINE_REVISION_RECORDING from "../../graphql/queries/RoutineRevisionRecording";
+const ROUTINE_REVISION_RECORDING =  gql`
   query ROUTINE_REVISION_RECORDING($id: String!) {
     routineRevisionRecording(id: $id) {
       id
@@ -32,9 +33,14 @@ const ROUTINE_REVISION_RECORDING = gql`
             exercises {
               id
               name
+              description
               format {
                 id
                 name
+                measurables {
+                  id
+                  name
+                }
               }
             }
             defaultNumSets
@@ -53,6 +59,10 @@ const ROUTINE_REVISION_RECORDING = gql`
             format {
               id
               name
+              measurables {
+                  id
+                  name
+                }
             }
           }
           defaultNumSets
@@ -85,6 +95,8 @@ const ROUTINE_REVISION_RECORDING = gql`
     }
   }
 `;
+
+console.log("ROUTINE_REVISION_RECORDING: ", ROUTINE_REVISION_RECORDING)
 
 const RoutineRecordingContainer = styled.div`
   display: flex;
@@ -140,7 +152,6 @@ const SetContainer = styled.div``;
 const NumSetsContainer = styled.div``;
 
 function RoutineRevisionRecording({ id }) {
-  console.log("RoutineRevisionRecording 1");
   const [errorText, setErrorText] = useState('');
 
   const [userId] = useLocalStorage('userId');
@@ -156,7 +167,6 @@ function RoutineRevisionRecording({ id }) {
   }
   console.log('data: ', data);
 
-  console.log("RoutineRevisionRecording 2");
   return (
     <RoutineRecordingContainer>
       <RoutineHeader>
@@ -170,19 +180,32 @@ function RoutineRevisionRecording({ id }) {
       <RoutineSetGroups>
         {data.routineRevisionRecording.routineRevision.setGroupPlacements.map(
           (setGroupPlacement, i) => {
-            const setGroupRecording = data.routineRevisionRecording.setGroupRecordings.find((setGroupRecording) => { setGroupRecording.setGroup.id === setGroupPlacement.setGroup.id});
+            let setGroupRecording;
+            if (data.routineRevisionRecording && data.routineRevisionRecording.setGroupRecordings) {
+              data.routineRevisionRecording.setGroupRecordings.forEach((setGroupRecording2) => {
+                if (setGroupRecording2.setGroup.id == setGroupPlacement.setGroup.id) {
+                  setGroupRecording = setGroupRecording2;
+                }
+              });
+          }
 
             if (i === data.routineRevisionRecording.completedSetGroups) {
-              return <ActiveSetGroup setGroup={setGroupPlacement.setGroup} setGroupRecording={setGroupRecording} />
+              console.log("found an active set group.");
+              if (data.routineRevisionRecording && data.routineRevisionRecording.setGroupRecordings) {
+                data.routineRevisionRecording.setGroupRecordings.forEach((setGroupRecording2) => {
+                  console.log("WHOAOHOAHOAHOAHO");
+                  console.log("setGroupRecording: ", setGroupRecording2);
+                  console.log("setGroupPlacement: ", setGroupPlacement);
+                });
+              }
+              return <ActiveSetGroup key={i+"activeSetGroup"} setGroup={setGroupPlacement.setGroup} setGroupRecording={setGroupRecording} routineRevisionRecordingId={data.routineRevisionRecording.id} />
             } else {
               const setGroup = setGroupPlacement.setGroup;
-              console.log('setGroup: ', setGroup);
               return (
-                <SetGroupOuterContainer>
+                <SetGroupOuterContainer key={i+"inactiveSetGroup"}>
                   <SetGroupContainer>
-                    {setGroup.exercises.map(exercise => {
-                      console.log("put exercise");
-                      return <SetContainer>{exercise.name}</SetContainer>;
+                    {setGroup.exercises.map((exercise,j) => {
+                      return <SetContainer key={j+"exercise"}>{exercise.name}</SetContainer>;
                     })}
                   </SetGroupContainer>
                   <NumSetsContainer>
@@ -199,7 +222,6 @@ function RoutineRevisionRecording({ id }) {
 }
 
 RoutineRevisionRecording.propTypes = {
-  id: String,
 };
 
 export default RoutineRevisionRecording;
