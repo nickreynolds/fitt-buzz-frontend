@@ -2,41 +2,64 @@ import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { useLocalStorage, writeStorage } from '@rehooks/local-storage';
 
-import A from './A';
-import Img from './Img';
+import styled from 'styled-components';
+import { useRouteMatch, withRouter } from 'react-router-dom';
 import HeaderLink from './HeaderLink';
 import HeaderLinkButton from './HeaderLinkButton';
-import Banner from './banner.jpg';
 import messages from './messages';
-import styled from 'styled-components';
 
 const NavBarDiv = styled.div`
   display: flex;
   justify-content: space-between;
+  width: 100%;
+  background-color: #393d42;
+  padding: 5px 5px 5px 5px;
 `;
 
-const LeftNavDiv = styled.div`
-`;
+const LeftNavDiv = styled.div``;
 
-const RightNavDiv = styled.div`
-`;
+const RightNavDiv = styled.div``;
 
 function Header() {
   const [token] = useLocalStorage('token');
-  console.log('token: ', token);
+  const rootMatch = useRouteMatch({ path: '/', strict: true });
+  const recordingMatch = useRouteMatch({
+    path: '/recording/:id',
+    strict: true,
+  });
+  const myHistoryMatch = useRouteMatch({ path: '/my-history', strict: true });
+  const exploreExercisesMatch = useRouteMatch({
+    path: '/explore-exercises',
+    strict: true,
+  });
+  const exploreRoutinesMatch = useRouteMatch({
+    path: '/explore-routines',
+    strict: true,
+  });
+
   if (token) {
-    console.log('yes token found');
     return (
       <NavBarDiv>
         <LeftNavDiv>
-          <HeaderLink to="/">My Routines</HeaderLink>
-          <HeaderLink to="/my-history">My History</HeaderLink>
-          <HeaderLink to="/explore-routines">Find Routines</HeaderLink>
-          <HeaderLink to="/explore-exercises">Exercises</HeaderLink>
+          <HeaderLink to="/" active={rootMatch && rootMatch.isExact}>
+            My Routines
+          </HeaderLink>
+          <HeaderLink
+            to="/my-history"
+            active={myHistoryMatch || recordingMatch}
+          >
+            My History
+          </HeaderLink>
+          <HeaderLink to="/explore-routines" active={exploreRoutinesMatch}>
+            Find Routines
+          </HeaderLink>
+          <HeaderLink to="/explore-exercises" active={exploreExercisesMatch}>
+            Exercises
+          </HeaderLink>
         </LeftNavDiv>
         <RightNavDiv>
           <HeaderLinkButton
-            onClick={e => {
+            onClick={() => {
               writeStorage('token', '');
             }}
           >
@@ -47,19 +70,18 @@ function Header() {
     );
   }
 
-  console.log('no token found');
   return (
     <div>
-      <NavBar>
+      <NavBarDiv>
         <HeaderLink to="/login">
           <FormattedMessage {...messages.login} />
         </HeaderLink>
         <HeaderLink to="/signup">
           <FormattedMessage {...messages.signup} />
         </HeaderLink>
-      </NavBar>
+      </NavBarDiv>
     </div>
   );
 }
 
-export default Header;
+export default withRouter(Header);
