@@ -166,16 +166,11 @@ function RoutineRevisionRecording({ id }) {
     console.log('error: ', error);
     return <span>{error}</span>;
   }
-  console.log('data: ', data);
 
   return (
     <RoutineRecordingContainer>
       <RoutineHeader>
         <>{data.routineRevisionRecording.routineRevision.routine.name}</>
-        <>
-          Completed Set Groups:{' '}
-          {data.routineRevisionRecording.completedSetGroups}
-        </>
       </RoutineHeader>
       {errorText && <span>{errorText}</span>}
       <RoutineSetGroups>
@@ -199,19 +194,6 @@ function RoutineRevisionRecording({ id }) {
             }
 
             if (i === data.routineRevisionRecording.completedSetGroups) {
-              console.log('found an active set group.');
-              if (
-                data.routineRevisionRecording &&
-                data.routineRevisionRecording.setGroupRecordings
-              ) {
-                data.routineRevisionRecording.setGroupRecordings.forEach(
-                  setGroupRecording2 => {
-                    console.log('WHOAOHOAHOAHOAHO');
-                    console.log('setGroupRecording: ', setGroupRecording2);
-                    console.log('setGroupPlacement: ', setGroupPlacement);
-                  },
-                );
-              }
               return (
                 <ActiveSetGroup
                   key={`${i}activeSetGroup`}

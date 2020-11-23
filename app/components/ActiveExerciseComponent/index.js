@@ -137,13 +137,24 @@ function ActiveExerciseComponent({
   setGroupRecording,
   setGroup,
   routineRevisionRecordingId,
+  previousExerciseRecording
 }) {
   const startingInputs = new Array(exercise.format.measurables.length);
+  console.log("ACTIVE EXERCISE PREVIOUS EXERCISE RECORDING: ", previousExerciseRecording);
   exercise.format.measurables.forEach((measurable, i) => {
     let startingValue = '0';
     if (measurable.name === 'resistance' || measurable.name === 'assistance') {
       startingValue = '0@lbs';
     }
+
+    if (previousExerciseRecording) {
+      previousExerciseRecording.measurableRecordings.forEach((measRec) => {
+        if (measRec.measurable.id == measurable.id) {
+          startingValue = measRec.value;
+        }
+      })
+    }
+
     startingInputs[i] = { value: startingValue, measurableID: measurable.id };
   });
 
