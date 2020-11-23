@@ -9,12 +9,12 @@ import React from 'react';
 import styled from 'styled-components';
 
 import { FormattedMessage } from 'react-intl';
-import messages from './messages';
 import { Link } from 'react-router-dom';
+import messages from './messages';
 import { colors } from '../../utils/constants';
 
 const RoutineContainer = styled.div`
-  border: 1px solid;
+  border: none;
   border-radius: 4px;
   background-color: ${colors.secondaryBackground};
   color: white;
@@ -33,7 +33,7 @@ const ExerciseListContainer = styled.td`
 const ExerciseContainer = styled.div`
   color: white;
   background-color: ${colors.popElement1};
-  border: 1px solid;
+  border: none;
   border-radius: 4px;
   padding: 2px 2px 2px 2px;
   margin-right: 2px;
@@ -70,16 +70,20 @@ function RoutineRecordingListItem(props) {
   const date = new Date(parseInt(recording.createdAt));
   return (
     <RoutineContainer key={recording.id}>
-      <RoutineLink to={`/recording/${recording.id}`}>Recording of {recording.routineRevision.routine.name}</RoutineLink>
-      <SmallRoutineLink to={`/recording/${recording.id}`}>{date.toDateString() + " - " + date.toLocaleTimeString()}</SmallRoutineLink>
-      <DescriptionBlock>{recording.routineRevision.routine.description}</DescriptionBlock>
+      <RoutineLink to={`/recording/${recording.id}`}>
+        Recording of {recording.routineRevision.routine.name}
+      </RoutineLink>
+      <SmallRoutineLink to={`/recording/${recording.id}`}>
+        {`${date.toDateString()} - ${date.toLocaleTimeString()}`}
+      </SmallRoutineLink>
+      <DescriptionBlock>
+        {recording.routineRevision.routine.description}
+      </DescriptionBlock>
       <ExerciseListContainer>
-        {recording.routineRevision.setGroupPlacements.map(
-          setGroupPlacement => {
-            return setGroupPlacement.setGroup.exercises.map(exercise => {
-              return <ExerciseContainer>{exercise.name}</ExerciseContainer>;
-            });
-          },
+        {recording.routineRevision.setGroupPlacements.map(setGroupPlacement =>
+          setGroupPlacement.setGroup.exercises.map(exercise => (
+            <ExerciseContainer>{exercise.name}</ExerciseContainer>
+          )),
         )}
       </ExerciseListContainer>
     </RoutineContainer>

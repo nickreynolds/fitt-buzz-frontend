@@ -9,12 +9,12 @@ import React from 'react';
 import styled from 'styled-components';
 
 import { FormattedMessage } from 'react-intl';
-import messages from './messages';
 import { Link } from 'react-router-dom';
+import messages from './messages';
 import { colors } from '../../utils/constants';
 
 const RoutineContainer = styled.div`
-  border: 1px solid;
+  border: none;
   border-radius: 4px;
   background-color: ${colors.secondaryBackground};
   color: white;
@@ -33,7 +33,7 @@ const ExerciseListContainer = styled.td`
 const ExerciseContainer = styled.div`
   color: white;
   background-color: ${colors.popElement1};
-  border: 1px solid;
+  border: none;
   border-radius: 4px;
   padding: 2px 2px 2px 2px;
   margin-right: 2px;
@@ -67,11 +67,10 @@ function RoutineListItem(props) {
       <DescriptionBlock>{routine.description}</DescriptionBlock>
       <ExerciseListContainer>
         {routine.revisions[numRevisions - 1].setGroupPlacements.map(
-          setGroupPlacement => {
-            return setGroupPlacement.setGroup.exercises.map(exercise => {
-              return <ExerciseContainer>{exercise.name}</ExerciseContainer>;
-            });
-          },
+          setGroupPlacement =>
+            setGroupPlacement.setGroup.exercises.map(exercise => (
+              <ExerciseContainer>{exercise.name}</ExerciseContainer>
+            )),
         )}
       </ExerciseListContainer>
     </RoutineContainer>

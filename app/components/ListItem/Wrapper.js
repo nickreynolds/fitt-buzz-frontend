@@ -6,7 +6,7 @@ const Wrapper = styled.li`
   display: flex;
   align-items: center;
   position: relative;
-  border-top: 1px solid #eee;
+  border: none;
 
   &:first-child {
     border-top: none;

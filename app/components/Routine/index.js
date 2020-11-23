@@ -9,13 +9,13 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 
 import { FormattedMessage } from 'react-intl';
-import messages from './messages';
 import { useQuery, gql, useMutation } from '@apollo/client';
+import { Redirect } from 'react-router-dom';
+import useLocalStorage from '@rehooks/local-storage';
+import messages from './messages';
 import CloneRoutineAtRevision from '../../graphql/mutations/CloneRoutine';
 import StartRoutineRevisionRecording from '../../graphql/mutations/StartRoutineRevisionRecording';
 import { colors } from '../../utils/constants';
-import { Redirect } from 'react-router-dom';
-import useLocalStorage from '@rehooks/local-storage';
 const ROUTINE = gql`
   query ROUTINE($routineId: String!) {
     routine(id: $routineId) {
@@ -83,7 +83,7 @@ const SetGroupOuterContainer = styled.div`
   justify-content: space-between;
   margin: 4px 4px 4px 4px;
   padding: 4px 4px 4px 4px;
-  border: 1px solid;
+  border: none;
   border-radius: 4px;
 `;
 
@@ -92,7 +92,7 @@ const SetGroupContainer = styled.div`
   flex-direction: column;
   align-items: left;
   width: 80%;
-  border-right: 1px solid;
+  border: none;
 `;
 
 const SetContainer = styled.div``;
@@ -117,7 +117,8 @@ function Routine({ routineId }) {
 
   if (loading) {
     return <></>;
-  } else if (error) {
+  }
+  if (error) {
     console.log('error: ', error);
     return <span>{error}</span>;
   }
@@ -184,17 +185,17 @@ function Routine({ routineId }) {
       <RoutineSetGroups>
         {data.routine.revisions[revisionIndex].setGroupPlacements.map(
           setGroupPlacement => {
-            const setGroup = setGroupPlacement.setGroup;
+            const { setGroup } = setGroupPlacement;
             // console.log('setGroup: ', setGroup);
             return (
               <SetGroupOuterContainer>
                 <SetGroupContainer>
-                  {setGroup.exercises.map(exercise => {
-                    return <SetContainer>{exercise.name}</SetContainer>;
-                  })}
+                  {setGroup.exercises.map(exercise => (
+                    <SetContainer>{exercise.name}</SetContainer>
+                  ))}
                 </SetGroupContainer>
                 <NumSetsContainer>
-                  {' - x' + setGroup.defaultNumSets}
+                  {` - x${setGroup.defaultNumSets}`}
                 </NumSetsContainer>
               </SetGroupOuterContainer>
             );

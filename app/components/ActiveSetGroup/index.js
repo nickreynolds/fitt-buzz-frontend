@@ -9,12 +9,11 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 
 import { FormattedMessage } from 'react-intl';
-import messages from './messages';
 import { useQuery, gql, useMutation } from '@apollo/client';
-import { colors } from '../../utils/constants';
 import useLocalStorage from '@rehooks/local-storage';
-import ActiveExerciseComponent from "../ActiveExerciseComponent";
-
+import messages from './messages';
+import { colors } from '../../utils/constants';
+import ActiveExerciseComponent from '../ActiveExerciseComponent';
 
 const ActiveSetGroupContainer = styled.div`
   background-color: ${colors.tertiaryBackground};
@@ -23,7 +22,7 @@ const ActiveSetGroupContainer = styled.div`
   font-family: 'Roboto', sans-serif;
   margin: 4px 4px 4px 4px;
   padding: 4px 4px 4px 4px;
-  border: 1px solid;
+  border: none;
   border-radius: 4px;
 `;
 
@@ -34,7 +33,7 @@ const ActiveSetComponent = styled.div`
   font-family: 'Roboto', sans-serif;
   margin: 4px 4px 4px 4px;
   padding: 4px 4px 4px 4px;
-  border: 1px solid;
+  border: none;
   border-radius: 4px;
 `;
 
@@ -45,10 +44,9 @@ const DefaultSetComponent = styled.div`
   font-family: 'Roboto', sans-serif;
   margin: 4px 4px 4px 4px;
   padding: 4px 4px 4px 4px;
-  border: 1px solid;
+  border: none;
   border-radius: 4px;
 `;
-
 
 const DefaultExerciseComponent = styled.div`
   background-color: ${colors.secondaryBackground};
@@ -57,40 +55,55 @@ const DefaultExerciseComponent = styled.div`
   font-family: 'Roboto', sans-serif;
   margin: 4px 4px 4px 4px;
   padding: 4px 4px 4px 4px;
-  border: 1px solid;
+  border: none;
   border-radius: 4px;
 `;
 
-
-function ActiveSetGroup({ setGroup, setGroupRecording, routineRevisionRecordingId }) {
-
+function ActiveSetGroup({
+  setGroup,
+  setGroupRecording,
+  routineRevisionRecordingId,
+}) {
   const currentSet = setGroupRecording ? setGroupRecording.completedSets : 0;
   // console.log("currentSet: ", currentSet);
   const numSets = setGroup.defaultNumSets;
-  let setComponents = [];
-  for (var i = 0; i < numSets; i++) {
+  const setComponents = [];
+  for (let i = 0; i < numSets; i++) {
     const isActiveSet = i == currentSet;
     const Component2 = isActiveSet ? ActiveSetComponent : DefaultSetComponent;
     // console.log("setGroupRecording: ", setGroupRecording);
-    const activeExerciseIndex = setGroupRecording && setGroupRecording.setRecordings[i] ? setGroupRecording.setRecordings[i].exerciseRecordings.length : 0;
+    const activeExerciseIndex =
+      setGroupRecording && setGroupRecording.setRecordings[i]
+        ? setGroupRecording.setRecordings[i].exerciseRecordings.length
+        : 0;
 
-    const setComponent = (<Component2 key={i+"component"}>
-      {setGroup.exercises.map((exercise, j) => {
-        if (isActiveSet && j == activeExerciseIndex) {
-
-          return (<ActiveExerciseComponent key={j+"activeSetGroup"} exercise={exercise} setGroup={setGroup} setGroupRecording={setGroupRecording} routineRevisionRecordingId={routineRevisionRecordingId} />)
-        } else {
-          return (<DefaultExerciseComponent key={j+"defaultSetGroup"}>{exercise.name}</DefaultExerciseComponent>)
-        }
-      })}
-    </Component2>);
+    const setComponent = (
+      <Component2 key={`${i}component`}>
+        {setGroup.exercises.map((exercise, j) => {
+          if (isActiveSet && j == activeExerciseIndex) {
+            return (
+              <ActiveExerciseComponent
+                key={`${j}activeSetGroup`}
+                exercise={exercise}
+                setGroup={setGroup}
+                setGroupRecording={setGroupRecording}
+                routineRevisionRecordingId={routineRevisionRecordingId}
+              />
+            );
+          }
+          return (
+            <DefaultExerciseComponent key={`${j}defaultSetGroup`}>
+              {exercise.name}
+            </DefaultExerciseComponent>
+          );
+        })}
+      </Component2>
+    );
     setComponents.push(setComponent);
   }
   return (
     <ActiveSetGroupContainer>
-      {
-      setComponents.map((comp) => { return comp })
-      }
+      {setComponents.map(comp => comp)}
     </ActiveSetGroupContainer>
   );
 }

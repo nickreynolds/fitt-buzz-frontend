@@ -9,14 +9,14 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 
 import { FormattedMessage } from 'react-intl';
-import messages from './messages';
 import { useQuery, gql, useMutation } from '@apollo/client';
-import { colors } from '../../utils/constants';
 import useLocalStorage from '@rehooks/local-storage';
+import messages from './messages';
+import { colors } from '../../utils/constants';
 import ActiveSetGroup from '../ActiveSetGroup';
 
 // import ROUTINE_REVISION_RECORDING from "../../graphql/queries/RoutineRevisionRecording";
-const ROUTINE_REVISION_RECORDING =  gql`
+const ROUTINE_REVISION_RECORDING = gql`
   query ROUTINE_REVISION_RECORDING($id: String!) {
     routineRevisionRecording(id: $id) {
       id
@@ -60,9 +60,9 @@ const ROUTINE_REVISION_RECORDING =  gql`
               id
               name
               measurables {
-                  id
-                  name
-                }
+                id
+                name
+              }
             }
           }
           defaultNumSets
@@ -96,7 +96,7 @@ const ROUTINE_REVISION_RECORDING =  gql`
   }
 `;
 
-console.log("ROUTINE_REVISION_RECORDING: ", ROUTINE_REVISION_RECORDING)
+console.log('ROUTINE_REVISION_RECORDING: ', ROUTINE_REVISION_RECORDING);
 
 const RoutineRecordingContainer = styled.div`
   display: flex;
@@ -135,7 +135,7 @@ const SetGroupOuterContainer = styled.div`
   justify-content: space-between;
   margin: 4px 4px 4px 4px;
   padding: 4px 4px 4px 4px;
-  border: 1px solid;
+  border: none;
   border-radius: 4px;
 `;
 
@@ -144,7 +144,7 @@ const SetGroupContainer = styled.div`
   flex-direction: column;
   align-items: left;
   width: 80%;
-  border-right: 1px solid;
+  border: none;
 `;
 
 const SetContainer = styled.div``;
@@ -161,7 +161,8 @@ function RoutineRevisionRecording({ id }) {
 
   if (loading) {
     return <></>;
-  } else if (error) {
+  }
+  if (error) {
     console.log('error: ', error);
     return <span>{error}</span>;
   }
@@ -181,39 +182,60 @@ function RoutineRevisionRecording({ id }) {
         {data.routineRevisionRecording.routineRevision.setGroupPlacements.map(
           (setGroupPlacement, i) => {
             let setGroupRecording;
-            if (data.routineRevisionRecording && data.routineRevisionRecording.setGroupRecordings) {
-              data.routineRevisionRecording.setGroupRecordings.forEach((setGroupRecording2) => {
-                if (setGroupRecording2.setGroup.id == setGroupPlacement.setGroup.id) {
-                  setGroupRecording = setGroupRecording2;
-                }
-              });
-          }
-
-            if (i === data.routineRevisionRecording.completedSetGroups) {
-              console.log("found an active set group.");
-              if (data.routineRevisionRecording && data.routineRevisionRecording.setGroupRecordings) {
-                data.routineRevisionRecording.setGroupRecordings.forEach((setGroupRecording2) => {
-                  console.log("WHOAOHOAHOAHOAHO");
-                  console.log("setGroupRecording: ", setGroupRecording2);
-                  console.log("setGroupPlacement: ", setGroupPlacement);
-                });
-              }
-              return <ActiveSetGroup key={i+"activeSetGroup"} setGroup={setGroupPlacement.setGroup} setGroupRecording={setGroupRecording} routineRevisionRecordingId={data.routineRevisionRecording.id} />
-            } else {
-              const setGroup = setGroupPlacement.setGroup;
-              return (
-                <SetGroupOuterContainer key={i+"inactiveSetGroup"}>
-                  <SetGroupContainer>
-                    {setGroup.exercises.map((exercise,j) => {
-                      return <SetContainer key={j+"exercise"}>{exercise.name}</SetContainer>;
-                    })}
-                  </SetGroupContainer>
-                  <NumSetsContainer>
-                    {' - x' + setGroup.defaultNumSets}
-                  </NumSetsContainer>
-                </SetGroupOuterContainer>
+            if (
+              data.routineRevisionRecording &&
+              data.routineRevisionRecording.setGroupRecordings
+            ) {
+              data.routineRevisionRecording.setGroupRecordings.forEach(
+                setGroupRecording2 => {
+                  if (
+                    setGroupRecording2.setGroup.id ==
+                    setGroupPlacement.setGroup.id
+                  ) {
+                    setGroupRecording = setGroupRecording2;
+                  }
+                },
               );
             }
+
+            if (i === data.routineRevisionRecording.completedSetGroups) {
+              console.log('found an active set group.');
+              if (
+                data.routineRevisionRecording &&
+                data.routineRevisionRecording.setGroupRecordings
+              ) {
+                data.routineRevisionRecording.setGroupRecordings.forEach(
+                  setGroupRecording2 => {
+                    console.log('WHOAOHOAHOAHOAHO');
+                    console.log('setGroupRecording: ', setGroupRecording2);
+                    console.log('setGroupPlacement: ', setGroupPlacement);
+                  },
+                );
+              }
+              return (
+                <ActiveSetGroup
+                  key={`${i}activeSetGroup`}
+                  setGroup={setGroupPlacement.setGroup}
+                  setGroupRecording={setGroupRecording}
+                  routineRevisionRecordingId={data.routineRevisionRecording.id}
+                />
+              );
+            }
+            const { setGroup } = setGroupPlacement;
+            return (
+              <SetGroupOuterContainer key={`${i}inactiveSetGroup`}>
+                <SetGroupContainer>
+                  {setGroup.exercises.map((exercise, j) => (
+                    <SetContainer key={`${j}exercise`}>
+                      {exercise.name}
+                    </SetContainer>
+                  ))}
+                </SetGroupContainer>
+                <NumSetsContainer>
+                  {` - x${setGroup.defaultNumSets}`}
+                </NumSetsContainer>
+              </SetGroupOuterContainer>
+            );
           },
         )}
       </RoutineSetGroups>
@@ -221,7 +243,6 @@ function RoutineRevisionRecording({ id }) {
   );
 }
 
-RoutineRevisionRecording.propTypes = {
-};
+RoutineRevisionRecording.propTypes = {};
 
 export default RoutineRevisionRecording;
