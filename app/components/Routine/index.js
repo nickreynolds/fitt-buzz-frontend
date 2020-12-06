@@ -123,10 +123,14 @@ function Routine({ routineId }) {
     return <span>{error}</span>;
   }
 
-  const currentUserIsOwner = userId === data.routine.createdBy.id;
+  console.log("1");
+  console.log("data: ", data);
+  const currentUserIsOwner = userId === ((data.routine && data.routine.createdBy) ? data.routine.createdBy.id : "fake ");
+  console.log("userId: ", userId);
   const numRevisions = data.routine.revisions.length;
   const revisionId = data.routine.revisions[numRevisions - 1].id;
   const revisionIndex = numRevisions - 1;
+  console.log("2");
   return (
     <RoutineContainer>
       <RoutineHeader>

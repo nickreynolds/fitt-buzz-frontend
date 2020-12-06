@@ -114,6 +114,7 @@ function ActiveSetGroup({
   // console.log("currentSet: ", currentSet);
   const setComponents = [];
   for (let i = 0; i < numSets; i++) {
+    console.log("1");
     const isActiveSet = i == currentSet;
     const Component2 = isActiveSet ? ActiveSetComponent : DefaultSetComponent;
     // console.log("setGroupRecording: ", setGroupRecording);
@@ -121,20 +122,24 @@ function ActiveSetGroup({
       setGroupRecording && setGroupRecording.setRecordings[i]
         ? setGroupRecording.setRecordings[i].exerciseRecordings.length
         : 0;
-    const setRecording = myPreviousSetGroupRecording.setRecordings && myPreviousSetGroupRecording.setRecordings.length >= i && myPreviousSetGroupRecording.setRecordings[i];
+        console.log("2");
+    const setRecording = myPreviousSetGroupRecording && myPreviousSetGroupRecording.setRecordings && myPreviousSetGroupRecording.setRecordings.length >= i && myPreviousSetGroupRecording.setRecordings[i];
+    
+    console.log("3");
     const setComponent = (
       <Component2 key={`${i}component`}>
         {setGroup.exercises.map((exercise, j) => {
+          console.log("4");
           let exerciseRecording;
           if (setRecording && setRecording.exerciseRecordings) {
             setRecording.exerciseRecordings.forEach((exrec) => {
-              if (exrec.exercise.id == exercise.id) {
+              if (exrec && (exrec.exercise.id == exercise.id)) {
                 exerciseRecording = exrec;
               }
             })
           }
           console.log("exercise.id: ", exercise.id);
-          console.log("exerciseRecording.exercise.id: ", exerciseRecording.exercise.id);
+          // console.log("exerciseRecording.exercise.id: ", exerciseRecording.exercise.id);
           if (isActiveSet && j == activeExerciseIndex) {
             return (
               <ActiveExerciseComponent

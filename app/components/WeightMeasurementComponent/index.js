@@ -1,24 +1,2 @@
-/**
- *
- * WeightMeasurementComponent
- *
- */
-
-import React, { memo } from 'react';
-// import PropTypes from 'prop-types';
-// import styled from 'styled-components';
-
-import { FormattedMessage } from 'react-intl';
-import messages from './messages';
-
-function WeightMeasurementComponent() {
-  return (
-    <div>
-      <FormattedMessage {...messages.header} />
-    </div>
-  );
-}
-
-WeightMeasurementComponent.propTypes = {};
-
-export default memo(WeightMeasurementComponent);
+import WeightMeasurementComponent from "./WeightMeasurementComponent";
+export default WeightMeasurementComponent;

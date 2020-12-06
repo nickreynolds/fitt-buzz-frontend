@@ -64,10 +64,10 @@
     "babel-core": "7.0.0-bridge.0"
   },
   "dependencies": {
-    "@apollo/client": "^3.2.5",
+    "@apollo/client": "^3.3.4",
     "@babel/polyfill": "7.4.3",
-    "@formatjs/intl-pluralrules": "^3.5.3",
-    "@formatjs/intl-relativetimeformat": "^7.3.3",
+    "@formatjs/intl-pluralrules": "^3.5.6",
+    "@formatjs/intl-relativetimeformat": "^7.3.6",
     "@rehooks/local-storage": "^2.4.0",
     "chalk": "^2.4.2",
     "compression": "1.7.4",

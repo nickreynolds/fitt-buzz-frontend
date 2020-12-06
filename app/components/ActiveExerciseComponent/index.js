@@ -14,6 +14,8 @@ import { colors } from '../../utils/constants';
 import messages from './messages';
 
 import ADD_EXERCISE_RECORDING from '../../graphql/mutations/AddExerciseRecording';
+import WeightMeasurementComponent from '../WeightMeasurementComponent';
+import RepsMeasurementComponent from '../RepsMeasurementComponent';
 // import ROUTINE_REVISION_RECORDING from "../../graphql/queries/RoutineRevisionRecording";
 const ROUTINE_REVISION_RECORDING = gql`
   query ROUTINE_REVISION_RECORDING($id: String!) {
@@ -120,6 +122,7 @@ const MeasurablesContainer = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-around;
+  align-items: center;
 `;
 
 const WeightInput = styled.input``;
@@ -144,7 +147,7 @@ function ActiveExerciseComponent({
   exercise.format.measurables.forEach((measurable, i) => {
     let startingValue = '0';
     if (measurable.name === 'resistance' || measurable.name === 'assistance') {
-      startingValue = '0@lbs';
+      startingValue = '0@lbs@standard';
     }
 
     if (previousExerciseRecording) {
@@ -160,7 +163,7 @@ function ActiveExerciseComponent({
 
   const [measurableInputs, setMeasurableInputs] = useState(startingInputs);
   const [addExerciseRecording, { data }] = useMutation(ADD_EXERCISE_RECORDING);
-
+  console.log("measurableInputs[i].value.split('@'): ", measurableInputs[1].value.split('@'))
   return (
     <ActiveExerciseContainer>
       <ExerciseName>{exercise.name}</ExerciseName>
@@ -170,28 +173,30 @@ function ActiveExerciseComponent({
           if (measurable.name === 'resistance') {
             return (
               <MeasurableDiv key="resistance">
-                weight:
-                <WeightInput
-                  key={`${i}0`}
-                  min="0"
-                  type="number"
-                  value={measurableInputs[i].value.split('@')[0]}
-                  onChange={e => {
+                <WeightMeasurementComponent 
+                  weightValue={measurableInputs[i].value.split('@')[0]}
+                  onWeightChange={weight => {
+                    console.log("on weight change!")
                     const newMeasurableInputs = measurableInputs;
-                    newMeasurableInputs[i].value = `${e.target.value}@${
+                    newMeasurableInputs[i].value = `${weight}@${
                       newMeasurableInputs[i].value.split('@')[1]
-                    }`;
+                    }@${newMeasurableInputs[i].value.split('@')[2] || "standard"}`;
                     setMeasurableInputs(_ => [...newMeasurableInputs]);
                   }}
-                />
-                <WeightInput
-                  key={`${i}1`}
-                  value={measurableInputs[i].value.split('@')[1]}
-                  onChange={e => {
+                  weightTypeValue={measurableInputs[i].value.split('@')[2] || "standard"}
+                  onWeightTypeChange={e => {
                     const newMeasurableInputs = measurableInputs;
                     newMeasurableInputs[i].value = `${
                       newMeasurableInputs[i].value.split('@')[0]
-                    }@${e.target.value}`;
+                    }@${newMeasurableInputs[i].value.split('@')[1]}@${e}`;
+                    setMeasurableInputs(_ => [...newMeasurableInputs]);
+                  }}
+                  unitsValue={measurableInputs[i].value.split('@')[1]}
+                  onUnitsChange={e => {
+                    const newMeasurableInputs = measurableInputs;
+                    newMeasurableInputs[i].value = `${
+                      newMeasurableInputs[i].value.split('@')[0]
+                    }@${e.target.value}@${newMeasurableInputs[i].value.split('@')[2] || "standard"}`;
                     setMeasurableInputs(_ => [...newMeasurableInputs]);
                   }}
                 />
@@ -232,17 +237,14 @@ function ActiveExerciseComponent({
           if (measurable.name === 'reps') {
             return (
               <MeasurableDiv key="reps">
-                reps:
-                <RepsInput
+                <RepsMeasurementComponent
                   key={`${i}0`}
-                  min="0"
-                  type="number"
-                  onChange={e => {
+                  onRepsChange={reps => {
                     const newMeasurableInputs = measurableInputs;
-                    newMeasurableInputs[i].value = e.target.value;
+                    newMeasurableInputs[i].value = reps + "";
                     setMeasurableInputs(_ => [...newMeasurableInputs]);
                   }}
-                  value={measurableInputs[i].value}
+                  repsValue={parseInt(measurableInputs[i].value)}
                 />
               </MeasurableDiv>
             );
@@ -297,6 +299,7 @@ function ActiveExerciseComponent({
             exerciseID: exercise.id,
             measurableRecordings: measurableInputs,
           };
+          // console.log("exerciseRecordingInput: ", exerciseRecordingInput);
           const result = await addExerciseRecording({
             variables: {
               routineRevisionRecordingId,
