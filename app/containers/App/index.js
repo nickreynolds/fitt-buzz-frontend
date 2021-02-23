@@ -25,6 +25,7 @@ import MyRoutinesFeed from 'components/MyRoutinesFeed';
 import MyHistoryFeed from 'components/MyHistoryFeed';
 
 import CreateExercisePage from 'containers/CreateExercisePage/Loadable';
+import CreateMusclePage from 'containers/CreateMusclePage/Loadable';
 import GlobalStyle from '../../global-styles';
 
 const AppWrapper = styled.div``;
@@ -61,6 +62,7 @@ export default function App() {
               component={RoutineRevisionRecordingPage}
             />
             <Route path="/create-exercise" component={CreateExercisePage} />
+            <Route path="/create-muscle" component={CreateMusclePage} />
           </AuthenticatedRoute>
           <Route path="" component={NotFoundPage} />
         </Switch>
